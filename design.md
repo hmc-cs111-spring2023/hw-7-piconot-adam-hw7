@@ -10,7 +10,7 @@ Engage Directive A:
 Detecting Right not Left Directive A
 Transition Up via Directive A
 
-Detect Up Left Directive B
+Detecting Up Left Directive B
 Transitioning Right via Directive B
 ```
 This language is based on Detecting a "state of existance" which is not just the available locations to move but also the current directive. 
