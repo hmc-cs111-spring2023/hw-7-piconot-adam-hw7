@@ -1,5 +1,5 @@
 # Design
--- Internal Language -- 
+-- External Language -- 
 
 Lets make "Picobot" more robotic (in a thematic way). My design for this is to use robotic language but not make it feel like a programming language 
 
@@ -7,7 +7,7 @@ Here is an example of what that could look like:
 ```
 Engage Directive A:
 
-Detecting Right Left Directive A
+Detecting Right not Left Directive A
 Transition Up via Directive A
 
 Detect Up Left Directive B
@@ -21,6 +21,7 @@ Once detected, the result is the transition (maybe navigate or Move? whats a rob
 
 Engage is then the method of starting this code at a specific state. State can be any string cause why not. Also maybe Detecting Right Left, means that *you are free to move to the right and the left)* rather then there are blocks there. Might be a bit more intuitive? 
 
+Future Adam: Had to add a (not) into how directions are returned. So `Detecting Not Right` meas "if their is not a block to the right."
 
 ## Who is the target for this design, e.g., are you assuming any knowledge on the part of the language users?
 
