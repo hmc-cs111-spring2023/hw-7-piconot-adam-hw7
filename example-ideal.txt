@@ -1,0 +1,28 @@
+Engage Directive A:
+
+# Alpha Directive, move to the far left 
+Detecting not Left Directive A
+Transition Left via Directive A
+
+Detecting Left Directive A 
+Transition via Directive B
+
+# Beta Directive, Move up to top 
+Detecting not Up Directive B 
+Transition Up via Directive B 
+
+Detecting Up not Down Directive B 
+Transition Down via Directive D
+
+# Delta, and Gamma  Directive, move down and up across the whole thing 
+Detecting not Down Directive D 
+Transition Down via Directive D 
+
+Detecting Down not Right Directive D 
+Transition Right via Directive G
+#
+Detecting not Up Directive G 
+Transition Up via Directive G
+
+Detecting Up not Right Directive G 
+Transition Right via Directive D
