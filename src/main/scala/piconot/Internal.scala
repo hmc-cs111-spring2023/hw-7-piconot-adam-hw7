@@ -3,35 +3,63 @@ package piconot.internal
 import picolib._
 import picolib.maze._
 import picolib.semantics._
+import picolib.display.TextDisplay
 import java.io.File
+import scala.collection.mutable.ListBuffer
 
-trait PicoOrder
+trait Directive
 
-trait State
+trait Env
 
-case object Up extends State
-case object Left extends State
-case object Right extends State
-case object Down extends State 
-case object NotUp extends State
-case object NotLeft extends State
-case object NotRight extends State
-case object NotDown extends State
-case class Directive(name : String) extends State
-case class And(p1 : State, p2 : State) extends State
+case object Up extends Env
+case object Left extends Env
+case object Right extends Env
+case object Down extends Env 
+case object NotUp extends Env
+case object NotLeft extends Env
+case object NotRight extends Env
+case object NotDown extends Env
+case class Directive(name : String) extends Directive
+case class And(p1 : Env, p2 : Env) extends Env
 
+// case class Detecting(p1 : State ) extends PicoOrder
+// case class Transitioning(initial : PicoOrder, result : PicoOrder) extends PicoOrder
+case class Via(direction : Env, directive : Directive) extends PicoOrder
 
-case class Detecting(p1 : State ) extends PicoOrder
-case class Transitioning(initial : PicoOrder, result : PicoOrder) extends PicoOrder
-case class Via(direction : State, directive : State) extends PicoOrder
+/** @author
+  *   Adam
+  */
+class PicoRobotic(val mazeFilename: String) extends App {
+    private val rules = ListBuffer.empty[Rule]
 
-def engage(orders : List[PicoOrder], directive: String) : Unit = {
-    var rules = List()
-    for(order <- orders) {
-        rules += convertToRule(order)
+  def addRule(rule: Rule) = rules += rule
+
+  def run = {
+    val maze = Maze(mazeFilename)
+    object bot extends Picobot(maze, rules.toList) with TextDisplay
+    bot.run()
+  }
+
+  def Detecting(environment: Env)(directive: Directive) : RuleBuilder = {
+    val envList = envToList(environment)
+    for (envList <- i) {
+    
     }
-}
+    new RuleBuilder (
+      State(directive),
+      Surroundings(envList[0], Blocked, Open, Anything)
+    )
+  } 
+    
+  def envToList(env : Env) : List[Env] = env match 
+    case And(e1, e2) => envToList(e1) ++ envToList(e2)
+    case _ => List(env)
 
-def convertToRule(order : PicoOrder) : Rule = {
-
+  class RuleBuilder(val startState: Env, val surroundings: Surroundings) {
+    val program = PicoRobotic.this
+    def Transition(rhs: (MoveDirection, Env)) = {
+    //   val (moveDirection, nextState) = rhs
+    //   val rule = new Rule(startState, surroundings, moveDirection, nextState)
+    //   program.addRule(rule)
+    }
 }

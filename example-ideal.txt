@@ -1,7 +1,7 @@
 Engage Directive A:
 
 # Alpha Directive, move to the far left 
-Detecting not Left Directive A
+Detecting not Left Directive A 
 Transition Left via Directive A
 
 Detecting Left Directive A 
