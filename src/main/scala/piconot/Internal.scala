@@ -42,11 +42,16 @@ class PicoRobotic(val mazeFilename: String) extends App {
 
   def Detecting(environment: Env)(directive: Directive) : RuleBuilder = {
     val envList = envToList(environment)
-    var outlist = List(Anything, Anything, Anything, Anything)
+    var outList = List(Anything, Anything, Anything, Anything)
     for (i <- envlist) {
-        if (i == Up) then outList[0] = Blocked
-        if i == NotUp then outList[0] = Open
-            
+        if (i == Up) then outList(0) = Blocked
+        if (i == NotUp) then outList(0) = Open
+        if (i == Down) then outList(0) = Blocked
+        if (i == NotDown) then outList(0) = Open
+        if (i == Left) then outList(0) = Blocked
+        if (i == NotLeft) then outList(0) = Open    
+        if (i == Right) then outList(0) = Blocked
+        if (i == NotRight) then outList(0) = Open
     }
     new RuleBuilder (
       State(directive),
