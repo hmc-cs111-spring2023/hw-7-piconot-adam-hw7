@@ -7,7 +7,7 @@ import picolib.display.TextDisplay
 import java.io.File
 import scala.collection.mutable.ListBuffer
 
-trait Directive
+trait Dir
 
 trait Env
 
@@ -19,7 +19,8 @@ case object NotUp extends Env
 case object NotLeft extends Env
 case object NotRight extends Env
 case object NotDown extends Env
-case class Directive(name : String) extends Directive
+case object Stay extends Env
+case class Directive(name : String) extends Dir
 case class And(p1 : Env, p2 : Env) extends Env
 
 // case class Detecting(p1 : State ) extends PicoOrder
@@ -34,16 +35,16 @@ class PicoRobotic(val mazeFilename: String) extends App {
 
   def addRule(rule: Rule) = rules += rule
 
-  def run = {
+  def engage = {
     val maze = Maze(mazeFilename)
     object bot extends Picobot(maze, rules.toList) with TextDisplay
     bot.run()
   }
 
-  def Detecting(environment: Env)(directive: Directive) : RuleBuilder = {
+  def Detecting(environment: Env)(directive: Dir) : RuleBuilder = {
     val envList = envToList(environment)
     var outList = List(Anything, Anything, Anything, Anything)
-    for (i <- envlist) {
+    for (i <- envList) {
         if (i == Up) then (outList(0) = Blocked)
         if (i == NotUp) then (outList(0) = Open)
         if (i == Down) then (outList(3) = Blocked)
@@ -60,18 +61,23 @@ class PicoRobotic(val mazeFilename: String) extends App {
   } 
 
   extension (e1 : Env)
-    def via(d1 : Directive) : (Env, Directive) = (e1, d1)
+    def via(d1 : Dir) : (Env, State) = (e1, State(d1.name))
 
 
-  def envToList(env : Env)  =  env match {
+  def envToList(env : Env) : List =  env match {
     case And(e1, e2) => envToList(e1) ++ envToList(e2)
     case _ => List(env)
   }
 
-  class RuleBuilder(val startState: Env, val surroundings: Surroundings) {
+  class RuleBuilder(val startState: State, val surroundings: Surroundings) {
     val program = PicoRobotic.this
-      def Transition(rhs: (Env, Directive)) = {
-        val (moveDirection, nextState) = rhs
+      def Transition(rhs: (Env, Dir)) = {
+        var moveDirection = StayHere
+        val (moveEnv, nextState) = rhs
+        if (moveEnv == Up) then (moveDirection = North)
+        if (moveEnv == Right) then (moveDirection = East)
+        if (moveEnv == Left) then (moveDirection = West)
+        if (moveEnv == Down) then (moveDirection = South)
         val rule = new Rule(startState, surroundings, moveDirection, nextState)
         program.addRule(rule)
       }
