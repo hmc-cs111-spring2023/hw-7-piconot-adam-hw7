@@ -24,7 +24,7 @@ case class And(p1 : Env, p2 : Env) extends Env
 
 // case class Detecting(p1 : State ) extends PicoOrder
 // case class Transitioning(initial : PicoOrder, result : PicoOrder) extends PicoOrder
-case class Via(direction : Env, directive : Directive) extends PicoOrder
+// case class Via(direction : Env, directive : Directive) extends PicoOrder
 
 /** @author
   *   Adam
@@ -44,30 +44,36 @@ class PicoRobotic(val mazeFilename: String) extends App {
     val envList = envToList(environment)
     var outList = List(Anything, Anything, Anything, Anything)
     for (i <- envlist) {
-        if (i == Up) then outList(0) = Blocked
-        if (i == NotUp) then outList(0) = Open
-        if (i == Down) then outList(0) = Blocked
-        if (i == NotDown) then outList(0) = Open
-        if (i == Left) then outList(0) = Blocked
-        if (i == NotLeft) then outList(0) = Open    
-        if (i == Right) then outList(0) = Blocked
-        if (i == NotRight) then outList(0) = Open
+        if (i == Up) then (outList(0) = Blocked)
+        if (i == NotUp) then (outList(0) = Open)
+        if (i == Down) then (outList(3) = Blocked)
+        if (i == NotDown) then (outList(3) = Open)
+        if (i == Left) then (outList(2) = Blocked)
+        if (i == NotLeft) then (outList(2) = Open)    
+        if (i == Right) then (outList(1) = Blocked)
+        if (i == NotRight) then (outList(1) = Open)
     }
     new RuleBuilder (
-      State(directive),
-      Surroundings(outList[0], Blocked, Open, Anything)
+      State(directive.name),
+      Surroundings(outList(0), outList(1), outList(2), outList(3))
     )
   } 
-    
-  def envToList(env : Env) : List[Env] = env match 
+
+  extension (e1 : Env)
+    def via(d1 : Directive) : (Env, Directive) = (e1, d1)
+
+
+  def envToList(env : Env)  =  env match {
     case And(e1, e2) => envToList(e1) ++ envToList(e2)
     case _ => List(env)
+  }
 
   class RuleBuilder(val startState: Env, val surroundings: Surroundings) {
     val program = PicoRobotic.this
-    def Transition(rhs: (MoveDirection, Env)) = {
-    //   val (moveDirection, nextState) = rhs
-    //   val rule = new Rule(startState, surroundings, moveDirection, nextState)
-    //   program.addRule(rule)
+      def Transition(rhs: (Env, Directive)) = {
+        val (moveDirection, nextState) = rhs
+        val rule = new Rule(startState, surroundings, moveDirection, nextState)
+        program.addRule(rule)
+      }
     }
 }
