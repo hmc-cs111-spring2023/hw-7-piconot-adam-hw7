@@ -62,6 +62,7 @@ class PicoRobotic(val mazeFilename: String) extends App {
 
   extension (e1 : Env)
     def via(d1 : Directive) : (Env, State) = (e1, State(d1.name))
+    def and(e2: Env) : Env = And(e1, e2) 
 
 
   def envToList(env : Env) : List[Env] =  env match {
