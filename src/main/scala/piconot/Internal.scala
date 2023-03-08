@@ -47,30 +47,33 @@ class PicoRobotic(val mazeFilename: String) extends App {
   def engage = {
     val maze = Maze(mazeFilename)
     object bot extends Picobot(maze, rules.toList) with TextDisplay
+    print(rules.toList)
     bot.run()
   }
 
   def Detecting(environment: Env)(directive: Directive) : RuleBuilder = {
     val envList = envToList(environment)
     var outList = ListBuffer.empty[RelativeDescription]
-    for (i <- envList) {
-        if (i == Up) then ( outList += Open)
-        else if (i == NotUp) then (outList += Blocked)
-        else (outList+= Anything)
 
-        if (i == Right) then (outList += Open)
-        else if (i == NotRight) then (outList += Blocked)
-        else (outList+= Anything)
+    if (envList.contains(Up)) then ( outList += Open)
+    else if (envList.contains(NotUp)) then (outList += Blocked)
+    else (outList+= Anything)
 
-        if (i == Left) then (outList += Open)
-        else if (i == NotLeft) then (outList += Blocked) 
-        else (outList+= Anything)
+    if (envList.contains(Right)) then (outList += Open)
+    else if (envList.contains(NotRight)) then (outList += Blocked)
+    else (outList+= Anything)
 
-        if (i == Down) then (outList += Open)
-        else if (i == NotDown) then (outList += Blocked)
-        else (outList+= Anything)
-    }
+    if (envList.contains(Left)) then (outList += Open)
+    else if (envList.contains(NotLeft)) then (outList += Blocked) 
+    else (outList+= Anything)
+
+    if (envList.contains(Down)) then (outList += Open)
+    else if (envList.contains(NotDown)) then (outList += Blocked)
+    else (outList+= Anything)
+    
+
     var surroundings = outList.toList
+    println(outList.length)
     new RuleBuilder (
       State(directive.name),
       Surroundings(surroundings(0), surroundings(1), surroundings(2), surroundings(3))
