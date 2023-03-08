@@ -6,6 +6,7 @@ import picolib.semantics._
 import picolib.display.TextDisplay
 import java.io.File
 import scala.collection.mutable.ListBuffer
+// import machines.given
 
 trait Dir
 
@@ -22,6 +23,13 @@ case object NotDown extends Env
 case object Stay extends Env
 case class Directive(name : String) extends Dir
 case class And(p1 : Env, p2 : Env) extends Env
+
+// given Conversion[Char, Dir] =
+//     c => Directive(c)
+
+// given Conversion[String, Dir] =
+//     s => Directive(s)
+
 
 // case class Detecting(p1 : State ) extends PicoOrder
 // case class Transitioning(initial : PicoOrder, result : PicoOrder) extends PicoOrder
@@ -59,6 +67,8 @@ class PicoRobotic(val mazeFilename: String) extends App {
       Surroundings(outList(0), outList(1), outList(2), outList(3))
     )
   } 
+
+
 
   extension (e1 : Env)
     def via(d1 : Directive) : (Env, State) = (e1, State(d1.name))

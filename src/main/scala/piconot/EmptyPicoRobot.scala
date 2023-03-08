@@ -15,6 +15,7 @@ object EmptyPicoRobot extends PicoRobotic("resources/empty.txt") {
 //   (1 `x***`) → N(1) // go all the way to the top
 //   (1 `N**x`) → S(2) // can't go up any more, so try to go down
   Detecting(NotUp)(Directive("1")) Transition (Up via Directive("1"))
+
   Detecting(Up and NotDown)(Directive("1")) Transition (Down via Directive("2"))
 
 //   // States 2 and 3: fill from top to bottom, left to right
