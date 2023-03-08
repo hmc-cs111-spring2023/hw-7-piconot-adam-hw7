@@ -1,7 +1,7 @@
 package piconot.internal
 
 // A Picobot program that can fill an empty room
-object EmptyRobot extends PicoRobotic("resources/empty.txt") {
+object EmptyPicoRobot extends PicoRobotic("resources/empty.txt") {
 
   // States 0 and 1: move to the top left
   Detecting(NotLeft)(Directive("0")) Transition (Left via Directive("0"))

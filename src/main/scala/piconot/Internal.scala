@@ -45,14 +45,14 @@ class PicoRobotic(val mazeFilename: String) extends App {
     val envList = envToList(environment)
     var outList = List(Anything, Anything, Anything, Anything)
     for (i <- envList) {
-        if (i == Up) then (outList(0) = Blocked)
-        if (i == NotUp) then (outList(0) = Open)
-        if (i == Down) then (outList(3) = Blocked)
-        if (i == NotDown) then (outList(3) = Open)
-        if (i == Left) then (outList(2) = Blocked)
-        if (i == NotLeft) then (outList(2) = Open)    
-        if (i == Right) then (outList(1) = Blocked)
-        if (i == NotRight) then (outList(1) = Open)
+        if (i == Up) then (outList.updated(0, Blocked))
+        if (i == NotUp) then (outList.updated(0, Open))
+        if (i == Down) then (outList.updated(3, Blocked))
+        if (i == NotDown) then (outList.updated(3, Open))
+        if (i == Left) then (outList.updated(2, Blocked))
+        if (i == NotLeft) then (outList.updated(2, Open))    
+        if (i == Right) then (outList.updated(1, Blocked))
+        if (i == NotRight) then (outList.updated(1, Open))
     }
     new RuleBuilder (
       State(directive.name),
@@ -72,16 +72,19 @@ class PicoRobotic(val mazeFilename: String) extends App {
   class RuleBuilder(val startState: State, val surroundings: Surroundings) {
     val program = PicoRobotic.this
       def Transition(rhs: (Env, State)) = {
-        var moveDirection = StayHere
         val (moveEnv, nextState) = rhs
-        
-        if (moveEnv == Up) then (moveDirection = North)
-        if (moveEnv == Right) then (moveDirection = East)
-        if (moveEnv == Left) then (moveDirection = West)
-        if (moveEnv == Down) then (moveDirection = South)
+        var moveDirection = convertToDirection(moveEnv)
         
         val rule = new Rule(startState, surroundings, moveDirection, nextState)
         program.addRule(rule)
       }
     }
+  
+    def convertToDirection(moveEnv : Env) = 
+        if (moveEnv == Up) then North
+        else if (moveEnv == Right) then East
+        else if (moveEnv == Left) then West
+        else if (moveEnv == Down) then South
+        else StayHere
+
 }
