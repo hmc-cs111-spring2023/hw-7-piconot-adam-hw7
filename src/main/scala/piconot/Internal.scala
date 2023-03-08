@@ -30,7 +30,8 @@ given Conversion[Char, Directive] =
 given Conversion[String, Directive] =
     s => Directive(s)
 
-
+given Conversion[Int, Directive] =
+    i => Directive(i.toString)
 // case class Detecting(p1 : State ) extends PicoOrder
 // case class Transitioning(initial : PicoOrder, result : PicoOrder) extends PicoOrder
 // case class Via(direction : Env, directive : Directive) extends PicoOrder
@@ -53,20 +54,20 @@ class PicoRobotic(val mazeFilename: String) extends App {
     val envList = envToList(environment)
     var outList = ListBuffer.empty[RelativeDescription]
     for (i <- envList) {
-        if (i == Up) then ( outList += Blocked)
-        else if (i == NotUp) then (outList += Open)
+        if (i == Up) then ( outList += Open)
+        else if (i == NotUp) then (outList += Blocked)
         else (outList+= Anything)
 
-        if (i == Right) then (outList += Blocked)
-        else if (i == NotRight) then (outList += Open)
+        if (i == Right) then (outList += Open)
+        else if (i == NotRight) then (outList += Blocked)
         else (outList+= Anything)
 
-        if (i == Left) then (outList += Blocked)
-        else if (i == NotLeft) then (outList += Open) 
+        if (i == Left) then (outList += Open)
+        else if (i == NotLeft) then (outList += Blocked) 
         else (outList+= Anything)
 
-        if (i == Down) then (outList += Blocked)
-        else if (i == NotDown) then (outList += Open)
+        if (i == Down) then (outList += Open)
+        else if (i == NotDown) then (outList += Blocked)
         else (outList+= Anything)
     }
     var surroundings = outList.toList
