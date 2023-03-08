@@ -31,7 +31,7 @@ case class And(p1 : Env, p2 : Env) extends Env
   *   Adam
   */
 class PicoRobotic(val mazeFilename: String) extends App {
-    private val rules = ListBuffer.empty[Rule]
+  private val rules = ListBuffer.empty[Rule]
 
   def addRule(rule: Rule) = rules += rule
 
@@ -41,7 +41,7 @@ class PicoRobotic(val mazeFilename: String) extends App {
     bot.run()
   }
 
-  def Detecting(environment: Env)(directive: Dir) : RuleBuilder = {
+  def Detecting(environment: Env)(directive: Directive) : RuleBuilder = {
     val envList = envToList(environment)
     var outList = List(Anything, Anything, Anything, Anything)
     for (i <- envList) {
@@ -61,23 +61,25 @@ class PicoRobotic(val mazeFilename: String) extends App {
   } 
 
   extension (e1 : Env)
-    def via(d1 : Dir) : (Env, State) = (e1, State(d1.name))
+    def via(d1 : Directive) : (Env, State) = (e1, State(d1.name))
 
 
-  def envToList(env : Env) : List =  env match {
+  def envToList(env : Env) : List[Env] =  env match {
     case And(e1, e2) => envToList(e1) ++ envToList(e2)
     case _ => List(env)
   }
 
   class RuleBuilder(val startState: State, val surroundings: Surroundings) {
     val program = PicoRobotic.this
-      def Transition(rhs: (Env, Dir)) = {
+      def Transition(rhs: (Env, State)) = {
         var moveDirection = StayHere
         val (moveEnv, nextState) = rhs
+        
         if (moveEnv == Up) then (moveDirection = North)
         if (moveEnv == Right) then (moveDirection = East)
         if (moveEnv == Left) then (moveDirection = West)
         if (moveEnv == Down) then (moveDirection = South)
+        
         val rule = new Rule(startState, surroundings, moveDirection, nextState)
         program.addRule(rule)
       }
