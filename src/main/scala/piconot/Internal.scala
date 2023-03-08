@@ -51,20 +51,28 @@ class PicoRobotic(val mazeFilename: String) extends App {
 
   def Detecting(environment: Env)(directive: Directive) : RuleBuilder = {
     val envList = envToList(environment)
-    var outList = List(Anything, Anything, Anything, Anything)
+    var outList = ListBuffer.empty[RelativeDescription]
     for (i <- envList) {
-        if (i == Up) then (outList.updated(0, Blocked))
-        if (i == NotUp) then (outList.updated(0, Open))
-        if (i == Down) then (outList.updated(3, Blocked))
-        if (i == NotDown) then (outList.updated(3, Open))
-        if (i == Left) then (outList.updated(2, Blocked))
-        if (i == NotLeft) then (outList.updated(2, Open))    
-        if (i == Right) then (outList.updated(1, Blocked))
-        if (i == NotRight) then (outList.updated(1, Open))
+        if (i == Up) then ( outList += Blocked)
+        else if (i == NotUp) then (outList += Open)
+        else (outList+= Anything)
+
+        if (i == Right) then (outList += Blocked)
+        else if (i == NotRight) then (outList += Open)
+        else (outList+= Anything)
+
+        if (i == Left) then (outList += Blocked)
+        else if (i == NotLeft) then (outList += Open) 
+        else (outList+= Anything)
+
+        if (i == Down) then (outList += Blocked)
+        else if (i == NotDown) then (outList += Open)
+        else (outList+= Anything)
     }
+    var surroundings = outList.toList
     new RuleBuilder (
       State(directive.name),
-      Surroundings(outList(0), outList(1), outList(2), outList(3))
+      Surroundings(surroundings(0), surroundings(1), surroundings(2), surroundings(3))
     )
   } 
 
