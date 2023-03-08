@@ -8,7 +8,7 @@ object EmptyPicoRobot extends PicoRobotic("resources/empty.txt") {
 //   // State 0: move left
 //   (0 `**x*`) → W(0) // go all the way to the left
 //   (0 `**W*`) → X(1) // can't go left anymore, so try to go up
-  Detecting(NotLeft)(Directive("0")) Transition (Left via Directive("0"))
+  Detecting(NotLeft)("0") Transition (Left via '0')
   Detecting(Left)(Directive("0")) Transition (Stay via Directive("1"))
 
 //   // State 1: move up

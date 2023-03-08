@@ -6,7 +6,7 @@ import picolib.semantics._
 import picolib.display.TextDisplay
 import java.io.File
 import scala.collection.mutable.ListBuffer
-// import machines.given
+import scala.language.implicitConversions
 
 trait Dir
 
@@ -24,11 +24,11 @@ case object Stay extends Env
 case class Directive(name : String) extends Dir
 case class And(p1 : Env, p2 : Env) extends Env
 
-// given Conversion[Char, Dir] =
-//     c => Directive(c)
+given Conversion[Char, Directive] =
+    c => Directive(c.toString)
 
-// given Conversion[String, Dir] =
-//     s => Directive(s)
+given Conversion[String, Directive] =
+    s => Directive(s)
 
 
 // case class Detecting(p1 : State ) extends PicoOrder
